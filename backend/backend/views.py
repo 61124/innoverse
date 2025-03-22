@@ -12,6 +12,103 @@ def test_api(request):
 from django.core.files.base import ContentFile
 import base64
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+import psycopg2
+from sklearn.model_selection import train_test_split
+
+def calculate_performance_score(result, timeSpent, revisitCount, dataset):
+    """
+    Calculate performance score based on result, time spent, and revisit count
+    """
+    # Calculate difficulty factor
+    difficulty_factor = np.log1p(revisitCount + timeSpent)
+    
+    # Calculate performance score using the same formula as in the dataset
+    performance_score = (
+        0.4 * np.tanh(result / 100) +                  
+        0.4 * np.tanh(result / difficulty_factor) +    
+        0.1 * (result / (timeSpent + 1)) +             
+        0.1 * np.exp(-revisitCount / 3)                    
+    )
+    
+    return performance_score
+
+@csrf_exempt
+def predict_improvement(request):
+    if request.method == 'POST':
+        try:
+            # Generate sample data instead of fetching from DB
+            test_sample = pd.DataFrame([{
+                'result': 90,  # Example score
+                'timeSpent': 60,  # Example time in minutes
+                'revisitCount': 1  # Example revisit count
+            }])
+
+            # Generate training data
+            np.random.seed(42)
+            num_rows = 1500
+            df = pd.DataFrame({
+                "result": np.random.randint(0, 101, num_rows),  
+                "timeSpent": np.random.randint(30, 301, num_rows),
+                "revisitCount": np.random.randint(1, 7, num_rows)
+            })
+
+            # Calculate difficulty factor
+            df["difficulty_factor"] = np.log1p(df["revisitCount"] + df["timeSpent"])
+            
+            # Calculate performance score
+            df["performanceScore"] = (
+                0.4 * np.tanh(df["result"] / 100) +                  
+                0.4 * np.tanh(df["result"] / df["difficulty_factor"]) +    
+                0.1 * (df["result"] / (df["timeSpent"] + 1)) +             
+                0.1 * np.exp(-df["revisitCount"] / 3)                    
+            )
+            
+            threshold = np.percentile(df["performanceScore"], 35)
+            df["label"] = np.where(df["performanceScore"] < threshold, 1, 0)
+
+            # Prepare features
+            X = df[["result", "timeSpent", "revisitCount"]]
+            y = df["label"]
+
+            # Train model
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            scaler = StandardScaler()
+            X_train_scaled = scaler.fit_transform(X_train)
+            
+            logistic_model = LogisticRegression()
+            logistic_model.fit(X_train_scaled, y_train)
+
+            # Make prediction
+            test_scaled = scaler.transform(test_sample)
+            prediction = logistic_model.predict(test_scaled)[0]
+
+            # Calculate performance score for the test sample
+            performance_score = calculate_performance_score(
+                result=test_sample['result'].iloc[0],
+                timeSpent=test_sample['timeSpent'].iloc[0],
+                revisitCount=test_sample['revisitCount'].iloc[0],
+                dataset=df
+            )
+
+            response_data = {
+                'needForImprovement': int(prediction),
+                'performanceScore': float(performance_score)
+            }
+
+            return JsonResponse(response_data)
+            
+        except Exception as e:
+            print(f"Error in predict_improvement: {str(e)}")  # Add this line for debugging
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 @csrf_exempt
 def login_view(request):
     if request.method == 'POST':

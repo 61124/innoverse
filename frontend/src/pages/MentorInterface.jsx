@@ -1,21 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/MentorInterface.css';
+import axios from 'axios';
 
 const MentorInterface = () => {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('Mentor Interface');
   const [showGraphs, setShowGraphs] = useState(false);
+  const [statsData, setStatsData] = useState({
+    totalHours: 60, // Hardcoded value
+    totalRevisits: 1, // Hardcoded value
+    averageScore: 90, // Hardcoded value
+    performanceScore: null, // This will be updated by the prediction model
+  });
   const navigate = useNavigate();
 
-  // Sample data for statistics
-  const statsData = {
-    totalHours: 215,
-    totalRevisits: 87,
-    averageScore: 79,
-    performanceScore: 83
+  // Hardcoded values for the model
+  const result = 90; // Hardcoded result
+  const timeTaken = 60; // Hardcoded time taken
+  const revisitCount = 1; // Hardcoded revisit count
+
+  // Function to calculate performance score
+  const calculatePerformanceScore = (result, timeTaken, revisitCount) => {
+    const difficultyFactor = Math.log1p(revisitCount + timeTaken);
+    const performanceScore =
+      0.4 * Math.tanh(result / 100) +
+      0.4 * Math.tanh(result / difficultyFactor) +
+      0.1 * (result / (timeTaken + 1)) +
+      0.1 * Math.exp(-revisitCount / 3);
+
+    // Convert to percentage and round to 2 decimal places
+    return (performanceScore * 100).toFixed(2);
   };
+
+  // Fetch prediction data from the backend
+  useEffect(() => {
+    if (user && user.profileCompleted) {
+      const performanceScore = calculatePerformanceScore(result, timeTaken, revisitCount);
+
+      // Update the performance score in the statsData
+      setStatsData((prevStats) => ({
+        ...prevStats,
+        performanceScore: performanceScore,
+      }));
+    }
+  }, [user]);
 
   // Sample data for hours per subject
   const subjectHours = [
@@ -23,7 +53,7 @@ const MentorInterface = () => {
     { subject: 'Web Development', hours: 56 },
     { subject: 'Machine Learning', hours: 38 },
     { subject: 'Python Programming', hours: 45 },
-    { subject: 'Database Systems', hours: 34 }
+    { subject: 'Database Systems', hours: 34 },
   ];
 
   // Sample data for resource revisits
@@ -32,7 +62,7 @@ const MentorInterface = () => {
     { resource: 'React Hooks Tutorial', revisits: 18 },
     { resource: 'Machine Learning Basics', revisits: 15 },
     { resource: 'SQL Fundamentals', revisits: 14 },
-    { resource: 'Data Structures Cheatsheet', revisits: 17 }
+    { resource: 'Data Structures Cheatsheet', revisits: 17 },
   ];
 
   // Sample quiz performance data
@@ -41,7 +71,7 @@ const MentorInterface = () => {
     { category: 'Frontend', score: 92 },
     { category: 'Backend', score: 78 },
     { category: 'Databases', score: 73 },
-    { category: 'AI & ML', score: 81 }
+    { category: 'AI & ML', score: 81 },
   ];
 
   // Function to get color based on score
@@ -53,7 +83,7 @@ const MentorInterface = () => {
 
   // Dummy bar chart component
   const BarChart = ({ data, title, valueKey, labelKey, barColor }) => {
-    const maxValue = Math.max(...data.map(item => item[valueKey]));
+    const maxValue = Math.max(...data.map((item) => item[valueKey]));
 
     return (
       <div className="chart-container">
@@ -67,7 +97,7 @@ const MentorInterface = () => {
                   className="bar-fill"
                   style={{
                     width: `${(item[valueKey] / maxValue) * 100}%`,
-                    backgroundColor: barColor || '#89a5df'
+                    backgroundColor: barColor || '#89a5df',
                   }}
                 ></div>
                 <span className="bar-value">{item[valueKey]}</span>
@@ -184,7 +214,7 @@ const MentorInterface = () => {
     { name: 'Dashboard', route: '/dashboard' },
     { name: 'Student Corner', route: '/student-corner' },
     { name: 'Resources', route: '/resources' },
-    { name: 'Mentor Interface', route: '/mentor-interface' }
+    { name: 'Mentor Interface', route: '/mentor-interface' },
   ];
 
   const handleNavClick = (route, tabName) => {
@@ -198,7 +228,7 @@ const MentorInterface = () => {
     navigate('/');
   };
 
-  // Handle profile completion - added new function
+  // Handle profile completion
   const handleCompleteProfile = () => {
     navigate('/profile-setup');
   };
@@ -266,7 +296,7 @@ const MentorInterface = () => {
                     { label: 'Total Hours', value: statsData.totalHours, icon: '⏱️' },
                     { label: 'Total Revisits', value: statsData.totalRevisits, icon: '🔄' },
                     { label: 'Average Score', value: `${statsData.averageScore}%`, icon: '📝' },
-                    { label: 'Performance', value: `${statsData.performanceScore}%`, icon: '📊' }
+                    { label: 'Performance', value: `${statsData.performanceScore || 'Loading...'}%`, icon: '📊' },
                   ].map((stat, idx) => (
                     <div key={idx} className="stat-card">
                       <div className="stat-content">
@@ -356,7 +386,7 @@ const MentorInterface = () => {
                               <td className="text-center">
                                 <span className="score-badge" style={{
                                   backgroundColor: scoreColor.bg,
-                                  color: scoreColor.text
+                                  color: scoreColor.text,
                                 }}>
                                   {avgScore}%
                                 </span>
