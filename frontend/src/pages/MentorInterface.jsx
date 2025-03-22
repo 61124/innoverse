@@ -192,6 +192,12 @@ const MentorInterface = () => {
     navigate(route);
   };
 
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   // Handle profile completion - added new function
   const handleCompleteProfile = () => {
     navigate('/profile-setup');
@@ -215,6 +221,13 @@ const MentorInterface = () => {
               </button>
             ))}
           </nav>
+
+          {/* Added Logout Button */}
+          <div className="sidebar-footer">
+            <button onClick={handleLogout} className="btn-logout">
+              Log Out
+            </button>
+          </div>
 
           {/* Help Section */}
           <div className="help-section">

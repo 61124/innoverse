@@ -39,7 +39,8 @@ def login_view(request):
                     return JsonResponse({
                         "status": "success",
                         "message": "Login successful!",
-                        "profileCompleted": user_profile.profile_completed
+                        "profileCompleted": user_profile.profile_completed,
+                        "name": user.first_name  # Add this line to return the name
                     })
                 else:
                     return JsonResponse({"status": "error", "message": "Invalid password."})

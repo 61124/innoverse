@@ -23,14 +23,15 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-        credentials: 'include', // Important for session cookies
+        credentials: 'include',
       });
-
+  
       const data = await response.json();
       
       if (data.status === 'success') {
         const userData = { 
-          email: email, 
+          email: email,
+          name: data.name, // Add this line to get the name
           profileCompleted: data.profileCompleted 
         };
         setUser(userData);

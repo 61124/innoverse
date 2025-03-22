@@ -29,8 +29,10 @@ function ProfileSetupPage() {
       }
     };
     
+    // Add the event listener to the document
     document.addEventListener('keydown', handleKeyDown);
     
+    // Clean up the event listener when component unmounts
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
@@ -40,13 +42,32 @@ function ProfileSetupPage() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
+    // Reset education details when education level changes
     if (name === 'educationLevel') {
       setFormData(prev => ({ ...prev, educationDetails: '' }));
     }
   };
   
   const handleFileChange = (e) => {
+    // In a real app, you would handle file uploads to a server
     setFormData({ ...formData, profilePicture: e.target.files[0] });
+  };
+  
+  // Check if required fields are filled for the current step
+  const isStepComplete = () => {
+    switch (currentStep) {
+      case 1:
+        return formData.name.trim() !== '' && formData.age !== '';
+      case 2:
+        return formData.city.trim() !== '';
+      case 3:
+        return formData.educationLevel !== '' && formData.educationDetails !== '';
+      case 4:
+        // Profile picture is optional
+        return true;
+      default:
+        return false;
+    }
   };
   
   const nextStep = () => {
@@ -129,21 +150,11 @@ function ProfileSetupPage() {
       setLoading(false);
     }
   };
-
-  const getOrdinalSuffix = (num) => {
-    const lastDigit = num % 10;
-    const lastTwoDigits = num % 100;
-    
-    if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
-      return 'th';
-    }
-    
-    switch (lastDigit) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
-    }
+  
+  // Custom function to handle form submission attempt
+  const handleFormSubmitAttempt = (e) => {
+    // Always prevent default form submission
+    e.preventDefault();
   };
   
   const renderEducationDetailsField = () => {
@@ -206,18 +217,48 @@ function ProfileSetupPage() {
     return null;
   };
 
+  // Helper function for ordinal suffixes
+  const getOrdinalSuffix = (num) => {
+    const lastDigit = num % 10;
+    const lastTwoDigits = num % 100;
+    
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 13) {
+      return 'th';
+    }
+    
+    switch (lastDigit) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
   return (
     <div className="profile-setup-page">
-      <div className="profile-setup-container">
-        <h1>Complete Your Profile</h1>
-        <p>Step {currentStep} of {totalSteps}</p>
+      <div className="setup-container">
+        <div className="setup-header">
+          <h1>Set Up Your Student Profile</h1>
+          <p>Complete your profile to get the most out of our learning platform</p>
+          
+          <div className="progress-bar">
+            {Array.from({ length: totalSteps }).map((_, index) => (
+              <div 
+                key={index} 
+                className={`progress-step ${index + 1 <= currentStep ? 'active' : ''}`}
+              />
+            ))}
+          </div>
+          <div className="progress-text">Step {currentStep} of {totalSteps}</div>
+        </div>
         
         {error && <div className="error-message">{error}</div>}
         
-        <form onSubmit={handleSubmit} className="profile-setup-form">
+        <form onSubmit={handleFormSubmitAttempt} className="setup-form">
           {currentStep === 1 && (
-            <div className="step-container">
-              <h2>Basic Information</h2>
+            <div className="setup-step">
+              <h2>Personal Information</h2>
+              
               <div className="form-group">
                 <label htmlFor="name">Full Name</label>
                 <input
@@ -230,26 +271,39 @@ function ProfileSetupPage() {
                   required
                 />
               </div>
+              
               <div className="form-group">
                 <label htmlFor="age">Age</label>
                 <input
                   type="number"
                   id="age"
                   name="age"
+                  min="5"
+                  max="99"
                   value={formData.age}
                   onChange={handleChange}
-                  placeholder="Enter your age"
-                  min="1"
-                  max="120"
+                  placeholder="Your age"
                   required
                 />
+              </div>
+              
+              <div className="step-buttons">
+                <button 
+                  type="button" 
+                  className="btn btn-primary" 
+                  onClick={nextStep}
+                  disabled={loading || !isStepComplete()}
+                >
+                  Next
+                </button>
               </div>
             </div>
           )}
           
           {currentStep === 2 && (
-            <div className="step-container">
+            <div className="setup-step">
               <h2>Location</h2>
+              
               <div className="form-group">
                 <label htmlFor="city">City</label>
                 <input
@@ -262,12 +316,32 @@ function ProfileSetupPage() {
                   required
                 />
               </div>
+              
+              <div className="step-buttons">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={prevStep}
+                  disabled={loading}
+                >
+                  Back
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-primary" 
+                  onClick={nextStep}
+                  disabled={loading || !isStepComplete()}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
           
           {currentStep === 3 && (
-            <div className="step-container">
-              <h2>Education</h2>
+            <div className="setup-step">
+              <h2>Education Details</h2>
+              
               <div className="form-group">
                 <label htmlFor="educationLevel">Education Level</label>
                 <select
@@ -278,70 +352,96 @@ function ProfileSetupPage() {
                   required
                 >
                   <option value="" disabled>Select your education level</option>
-                  <option value="school">School</option>
+                  <option value="school">School (1-10th)</option>
                   <option value="jrCollege">Junior College</option>
                   <option value="university">University</option>
                 </select>
               </div>
               
-              {renderEducationDetailsField()}
+              {formData.educationLevel && renderEducationDetailsField()}
+              
+              <div className="step-buttons">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={prevStep}
+                  disabled={loading}
+                >
+                  Back
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-primary" 
+                  onClick={nextStep}
+                  disabled={loading || !isStepComplete()}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
           
           {currentStep === 4 && (
-            <div className="step-container">
+            <div className="setup-step">
               <h2>Profile Picture</h2>
-              <div className="form-group">
-                <label htmlFor="profilePicture">Upload Profile Picture (Optional)</label>
-                <input
-                  type="file"
-                  id="profilePicture"
-                  name="profilePicture"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
+              
+              <div className="profile-picture-upload">
+                {formData.profilePicture ? (
+                  <div className="preview">
+                    <p>Selected file: {formData.profilePicture.name}</p>
+                  </div>
+                ) : (
+                  <div className="preview placeholder">
+                    <span>Preview</span>
+                  </div>
+                )}
+                
+                <div className="upload-controls">
+                  <label htmlFor="profilePicture" className="btn btn-outline">
+                    Select Image
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    name="profilePicture"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                  />
+                </div>
               </div>
               
-              {formData.profilePicture && (
-                <div className="preview-container">
-                  <p>Selected file: {formData.profilePicture.name}</p>
-                </div>
-              )}
+              <div className="step-buttons">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={prevStep}
+                  disabled={loading}
+                >
+                  Back
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-primary"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                >
+                  {loading ? 'Saving...' : 'Complete Setup'}
+                </button>
+              </div>
             </div>
           )}
-          
-          <div className="form-navigation">
-            {currentStep > 1 && (
-              <button 
-                type="button" 
-                onClick={prevStep}
-                className="btn btn-secondary"
-                disabled={loading}
-              >
-                Back
-              </button>
-            )}
-            
-            {currentStep < totalSteps ? (
-              <button 
-                type="button" 
-                onClick={nextStep}
-                className="btn btn-primary"
-                disabled={loading}
-              >
-                Next
-              </button>
-            ) : (
-              <button 
-                type="submit" 
-                className="btn btn-success"
-                disabled={loading}
-              >
-                {loading ? 'Saving...' : 'Complete Setup'}
-              </button>
-            )}
-          </div>
         </form>
+        
+        <div className="setup-skip">
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="btn-text"
+            disabled={loading}
+          >
+            Skip for now
+          </button>
+        </div>
       </div>
     </div>
   );
