@@ -1,0 +1,121 @@
+/* Navbar Styling - Adjusted for Smaller Size */
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #1b2430; /* Darker blue for a sleek look */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1.5rem; /* Reduced padding for a smaller navbar */
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .navbar-logo {
+    font-size: 1.3rem; /* Slightly smaller logo */
+    font-weight: 700;
+    color: #c691e6; /* Glowing purple to match theme */
+  }
+  
+  .navbar-menu {
+    display: flex;
+    list-style: none;
+  }
+  
+  .navbar-item {
+    margin: 0 0.8rem;
+  }
+  
+  .navbar-link {
+    font-weight: 500;
+    font-size: 0.95rem; /* Reduced font size for a cleaner look */
+    color: #cbd5e1;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-link:hover {
+    color: #c691e6;
+  }
+  
+  .navbar-auth {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Reduced gap */
+  }
+  
+  /* Adjusting Buttons */
+  .navbar-auth .navbar-link {
+    color: #e46e7f;
+  }
+  
+  .navbar-auth .btn {
+    background-color: #c691e6;
+    color: #fff;
+    padding: 8px 16px; /* Smaller buttons */
+    border-radius: 18px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .navbar-auth .btn:hover {
+    background-color: #a06acb;
+  }
+  
+  /* Mobile Menu */
+  .navbar-menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  
+  .navbar-menu-toggle span {
+    width: 22px;
+    height: 2.5px;
+    background-color: #cbd5e1;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+  }
+  
+  /* Mobile Responsive Design */
+  @media (max-width: 992px) {
+    .navbar-menu-toggle {
+      display: flex;
+    }
+  
+    .navbar-menu, .navbar-auth {
+      position: absolute;
+      top: 60px; /* Reduced height for a smaller navbar */
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      background-color: #1b2430;
+      padding: 1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+  
+    .navbar-menu.active, .navbar-auth.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  
+    .navbar-item {
+      margin: 0.75rem 2rem;
+    }
+  
+    .navbar-auth {
+      border-top: 1px solid #2d3748;
+      padding-top: 1rem;
+    }
+  }
+  

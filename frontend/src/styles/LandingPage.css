@@ -1,0 +1,220 @@
+/* Background with Grid and Gradient */
+.landing-page {
+    width: 100%;
+    min-height: 180vh; /* Ensures page is scrollable */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-image:
+        repeating-linear-gradient(
+            to right, #2d2a44 0 1px, transparent 2px 200px
+        ),
+        repeating-linear-gradient(
+            to bottom, #2d2a44 0 1px, transparent 2px 200px
+        ),
+        radial-gradient(
+            at 50% 50%, #2d2a44, #1d1b34
+        );
+    color: #eee;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Hero Section */
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100vh; /* Full viewport height */
+    padding: 3rem 2rem;
+    position: relative;
+  }
+  
+  .hero-content {
+    max-width: 700px;
+    z-index: 1; /* Keep content above canvas */
+  }
+  
+  /* Gradient Heading Effect */
+  .hero h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    background-image: linear-gradient(to left, #89a5df, #e46e7f, #e8e191);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+  }
+  
+  .hero h1.right {
+    background-image: linear-gradient(to right, #89a5df, #e46e7f, #e8e191);
+  }
+  
+  .hero p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #cbd5e1;
+  }
+  
+  /* Call to Action Buttons */
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+  
+  .btn {
+    padding: 14px 28px;
+    font-size: 1.25rem;
+    border-radius: 40px;
+    text-decoration: none;
+    border: 1px solid #afaeae55;
+    background-image: linear-gradient(to bottom, #eee1, transparent, #eee1);
+    cursor: pointer;
+    transition: background-color 0.5s, box-shadow 0.5s;
+  }
+  
+  .btn-primary {
+    background-color: #ff7f50;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(255, 127, 80, 0.4);
+  }
+  
+  .btn-secondary {
+    background-color: #00bcd4;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(0, 188, 212, 0.4);
+  }
+  
+  .btn:hover {
+    background-color: #c691e6;
+    color: #040018;
+    box-shadow: 0 0 50px #c691e6;
+  }
+  
+  /* Background Dots Animation */
+  .banner {
+    position: relative;
+  }
+  
+  #dotsCanvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 0; /* Behind the content */
+  }
+  
+  /* Navbar Styles */
+  .navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #1e293b; /* Dark blue background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  
+  .navbar-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #c691e6; /* Matching glowing purple */
+  }
+  
+  .navbar-menu {
+    display: flex;
+    list-style: none;
+  }
+  
+  .navbar-item {
+    margin: 0 1rem;
+  }
+  
+  .navbar-link {
+    font-weight: 500;
+    color: #cbd5e1; /* Light gray text */
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-link:hover {
+    color: #c691e6; /* Purple glow on hover */
+  }
+  
+  .navbar-auth {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .navbar-auth .navbar-link {
+    color: #e46e7f; /* Coral Pink for contrast */
+  }
+  
+  .navbar-auth .btn {
+    background-color: #c691e6;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .navbar-auth .btn:hover {
+    background-color: #a06acb; /* Darker purple */
+  }
+  
+  /* Footer Styling */
+  footer {
+    background-color: #1e293b;
+    color: #cbd5e1;
+    padding: 2rem;
+    text-align: center;
+    margin-top: auto; /* Push to bottom when scrolling */
+  }
+  
+  /* Custom Scrollbar */
+  body, html {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #334155 #1e293b;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #1e293b;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #475569;
+    border-radius: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 3rem;
+    }
+    .hero p {
+      font-size: 1.25rem;
+    }
+    .cta-buttons {
+      flex-direction: column;
+    }
+    .navbar-menu-toggle {
+      display: flex;
+    }
+  }
+  

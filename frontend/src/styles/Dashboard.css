@@ -1,0 +1,382 @@
+:root {
+  --primary-gradient: linear-gradient(to left, #89a5df, #e46e7f, #e8e191);
+  --accent-color-1: #e8e191;
+  --accent-color-2: #e46e7f;
+  --accent-color-3: #89a5df;
+  --bg-dark: rgba(18, 18, 18, 0.9); /* Slightly transparent dark background */
+  --bg-theme: linear-gradient(to right, var(--accent-color-3), var(--accent-color-2));
+  --card-bg: rgba(255, 255, 255, 0.07);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --button-primary: #ff7f50;
+  --nav-text: rgba(255, 255, 255, 0.9);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Global Utilities */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+
+/* Gradient Text */
+.gradient-text {
+  background-image: var(--primary-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+/* Dashboard Layout */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.dashboard-container {
+  display: flex;
+  width: 100%;
+  max-width: 1490px !important;
+  height: 90vh;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 260px;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-right: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nav-item {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  color: white; /* Set explicit color instead of var */
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: var(--hover-bg);
+}
+
+.nav-item-active {
+  background-color: var(--hover-bg);
+  color: var(--accent-color-1);
+  border-left: 3px solid var(--accent-color-2);
+}
+
+.help-section {
+  margin-top: auto;
+  padding-top: 2rem;
+}
+
+.help-card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--card-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.help-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--accent-color-1);
+}
+
+.help-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.help-button {
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  width: 100%;
+  background-color: var(--button-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.help-button:hover {
+  opacity: 0.9;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.btn-primary {
+  background-color: var(--accent-color-2); /* Use the accent color 2 */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9; /* Slightly reduce opacity on hover */
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color-1); /* Change to a different color on hover */
+  opacity: 0.9;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  /* background-color: var(--bg-dark); */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+.dashboard-header h1 {
+  font-size: 1.5rem;
+  color: var(--accent-color-2);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--accent-color-2);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  padding: 2rem;
+}
+
+.profile-reminder {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid var(--accent-color-1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-reminder h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-color-1);
+}
+
+.profile-reminder p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+.dashboard-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color-2);
+}
+
+.dashboard-card p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.feature-list, .resource-list {
+  list-style: none;
+}
+
+.feature-list li, .resource-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.feature-list li:last-child, .resource-list li:last-child {
+  border-bottom: none;
+}
+
+/* Screen Time Display */
+.screen-time-display {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1000;
+}
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: transparent;
+  border: 1px solid var(--accent-color-2);
+  color: var(--accent-color-2);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.btn-logout:hover {
+  background-color: var(--accent-color-2);
+  color: var(--text-primary);
+}
+/* Dashboard Content */
+.dashboard-content {
+  padding: 2.5rem; /* Increased padding */
+}
+
+.dashboard-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 2rem; /* Increased padding */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+}
+
+.dashboard-card h3 {
+  font-size: 1.5rem; /* Increased font size */
+  margin-bottom: 1rem;
+  color: var(--accent-color-2);
+}
+
+.dashboard-card p {
+  font-size: 1rem; /* Increased font size */
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem; /* Increased font size */
+  background-image: var(--primary-gradient); /* Added gradient background */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0.5rem 1rem; /* Added padding */
+  border-radius: 0.5rem; /* Rounded corners */
+}
+
+.dashboard-content .btn-primary {
+  background-color: var(--accent-color-2);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-content .btn-primary:hover {
+  opacity: 0.9;
+}
+
+.sidebar .sidebar-nav .nav-item {
+  color: white;
+}
+
+.nav-item:hover {
+  background-color: var(--hover-bg) !important;
+  /* No color override here so it preserves the hover effect */
+}
+
+.nav-item-active {
+  background-color: var(--hover-bg);
+  color: var(--accent-color-1) !important;
+  border-left: 3px solid var(--accent-color-2);
+}
